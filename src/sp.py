@@ -98,12 +98,15 @@ def print_results(results):
                                    initial_indent=indent,
                                    subsequent_indent=indent)
     for i, result in enumerate(results):
-        idx = colorama.Fore.CYAN + (str(i+1) + '.').ljust(3)
-        title = colorama.Fore.MAGENTA + result['title']
-        subtitle = colorama.Fore.BLUE + '[' + result['subtitle'] + ']'
-        description = colorama.Fore.WHITE + result['description']
-        print(f'{idx} {title} {subtitle}')
-        print(wrapper.fill(description))
+        idx = (str(i+1) + '.').ljust(3)  # 'dd.'
+        title = result['title']
+        link = result['subtitle']
+        description = result['description']
+        print(colorama.Fore.CYAN + idx, end=' ')
+        print(colorama.Fore.MAGENTA + title, end=' ')
+        print(colorama.Fore.BLUE + link)
+        if description:
+            print(wrapper.fill(colorama.Fore.WHITE + description))
         print()
 
 
