@@ -1,4 +1,4 @@
-# /usr/bin/env python3
+#!/usr/bin/env python3
 
 # Copyright (C) 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 #
