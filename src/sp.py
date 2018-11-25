@@ -24,6 +24,12 @@ import requests
 import colorama
 from lxml import html
 
+try:
+    import readline  # Enables the use of hotkeys at the prompt e.g. ctrl+a.
+except ImportError:
+    pass  # Unavailable on Windows.
+
+
 _VERSION_ = '1.0.0.dev1'
 
 LOGGER = logging.getLogger(__name__)
@@ -124,6 +130,7 @@ def get_prompt():
     color = colorama.Back.MAGENTA + colorama.Fore.BLACK
     color_reset = colorama.Back.RESET + colorama.Fore.RESET
     return color + PROMPT + color_reset + ' '
+
 
 class SpREPL():
     def __init__(self, args):
