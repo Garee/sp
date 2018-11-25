@@ -93,8 +93,8 @@ def print_results(results):
                                    subsequent_indent=indent)
     for i, result in enumerate(results):
         idx = colorama.Fore.CYAN + (str(i+1) + '.').ljust(3)
-        title = colorama.Fore.GREEN + result['title']
-        subtitle = colorama.Fore.YELLOW + '[' + result['subtitle'] + ']'
+        title = colorama.Fore.MAGENTA + result['title']
+        subtitle = colorama.Fore.BLUE + '[' + result['subtitle'] + ']'
         description = colorama.Fore.WHITE + result['description']
         print(f'{idx} {title} {subtitle}')
         print(wrapper.fill(description))
@@ -120,10 +120,15 @@ def parse_search_result_page(page):
     return results
 
 
+def get_prompt():
+    color = colorama.Back.MAGENTA + colorama.Fore.BLACK
+    color_reset = colorama.Back.RESET + colorama.Fore.RESET
+    return color + PROMPT + color_reset + ' '
+
 class SpREPL():
     def __init__(self, args):
         self.args = args
-        self.prompt = f'{PROMPT}: '
+        self.prompt = get_prompt()
 
     def loop(self):
         while True:
