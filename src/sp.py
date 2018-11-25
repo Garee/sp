@@ -104,7 +104,7 @@ def print_results(results):
         description = result['description']
         print(colorama.Fore.CYAN + idx, end=' ')
         print(colorama.Fore.MAGENTA + title, end=' ')
-        print(colorama.Fore.BLUE + link)
+        print(colorama.Fore.BLUE + '[' + link + ']')
         if description:
             print(wrapper.fill(colorama.Fore.WHITE + description))
         print()
