@@ -140,17 +140,13 @@ class SpREPL():
         self.args = args
         self.prompt = get_prompt()
 
+    def once(self, cmd):
+        self._handle_cmd(cmd)
+
     def loop(self):
         while True:
             cmd = self._read_command()
-            if cmd == '?':
-                SpArgumentParser.print_prompt_help()
-            elif cmd == 'q':
-                print(FAREWELL_MSG)
-                sys.exit(0)
-            else:
-                query = '+'.join(cmd.split())
-                search(query)
+            self._handle_cmd(cmd)
 
     def _read_command(self):
         while True:
@@ -161,6 +157,16 @@ class SpREPL():
             cmd = ' '.join(cmd.split())
             if cmd:
                 return cmd
+
+    def _handle_cmd(self, cmd):
+        if cmd == '?':
+            SpArgumentParser.print_prompt_help()
+        elif cmd == 'q':
+            print(FAREWELL_MSG)
+            sys.exit(0)
+        else:
+            query = '+'.join(cmd.split())
+            search(query)
 
 
 class SpArgumentParser(argparse.ArgumentParser):
@@ -206,7 +212,12 @@ def init_from_args(args):
 
 def start_repl(args):
     try:
-        SpREPL(args).loop()
+        repl = SpREPL(args)
+        if args.keywords:
+            cmd = ' '.join(args.keywords)
+            repl.once(cmd)
+        else:
+            repl.loop()
     except Exception as ex:
         LOGGER.error(ex)
         if LOGGER.isEnabledFor(logging.DEBUG):
