@@ -21,6 +21,7 @@ import logging
 import textwrap
 import argparse
 import requests
+import colorama
 from lxml import html
 
 _VERSION_ = '1.0.0.dev1'
@@ -86,12 +87,17 @@ def search(query):
 
 
 def print_results(results):
+    indent = ' ' * 4
+    wrapper = textwrap.TextWrapper(width=80,
+                                   initial_indent=indent,
+                                   subsequent_indent=indent)
     for i, result in enumerate(results):
-        title = result['title']
-        subtitle = result['subtitle']
-        description = result['description']
-        print(f'{i + 1}. {title} [{subtitle}]')
-        print(description)
+        idx = colorama.Fore.CYAN + (str(i+1) + '.').ljust(3)
+        title = colorama.Fore.GREEN + result['title']
+        subtitle = colorama.Fore.YELLOW + '[' + result['subtitle'] + ']'
+        description = colorama.Fore.WHITE + result['description']
+        print(f'{idx} {title} {subtitle}')
+        print(wrapper.fill(description))
         print()
 
 
@@ -175,6 +181,7 @@ def parse_args():
 def init():
     configure_logging()
     configure_sigint_handler()
+    colorama.init()
 
 
 def init_from_args(args):
