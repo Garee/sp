@@ -24,6 +24,7 @@ import argparse
 import requests
 import colorama
 import webbrowser
+import pyperclip
 from lxml import html
 
 try:
@@ -50,9 +51,10 @@ Website: https://github.com/garee/sp
 """
 
 PROMPT_HELP_MSG = """
-1..10 open search result in web browser
-?     show help
-q     exit
+1..10   open search result in web browser
+c 1..10 copy the search result link to the clipboard
+?       show help
+q       exit
 """
 
 
@@ -168,10 +170,25 @@ class SpREPL():
                 return cmd
 
     def _handle_cmd(self, cmd):
+        if not cmd:
+            return
         if cmd == '?':
             SpArgumentParser.print_prompt_help()
         elif cmd == 'q':
             sys.exit(0)
+        elif cmd[0] == 'c' and len(cmd.split()) > 1:
+            sub_cmds = cmd.split()
+            if sub_cmds[1].isdigit():
+                idx = int(sub_cmds[1])
+                if idx >= 1 and idx <= len(self.results):
+                    result = self.results[idx-1]
+                    link = result['link']
+                    pyperclip.copy(link)
+                    print(f'Copied link: {link}')
+                else:
+                    print('Invalid search result index.')
+            else:
+                print('Invalid search result index.')
         elif cmd.isdigit():
             idx = int(cmd)
             if idx >= 1 and idx <= len(self.results):
