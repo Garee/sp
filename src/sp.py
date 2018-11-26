@@ -51,6 +51,8 @@ Website: https://github.com/garee/sp
 """
 
 PROMPT_HELP_MSG = """
+n       view the next set of results
+p       view the previous set of results
 1..10   open search result in web browser
 c 1..10 copy the search result link to the clipboard
 ?       show help
@@ -88,20 +90,32 @@ def get_python_version():
     return '%d.%d.%d' % sys.version_info[:3]
 
 
-def search(query):
+def search(query, page=0, qid=''):
     url = 'https://www.startpage.com/do/search'
     data = {
         'cmd': 'process_search',
-        'query': query
+        'query': query,
+        'startat': page*10,
+        'rcount': int(page/2),
+        'qid': qid,
+        'abp': -1,
+        'cat': 'web',
+        'engine0': 'v1all',
+        'language': 'english',
+        'rl': 'NONE',
+        't': 'default'
     }
     try:
+        LOGGER.debug('%s %s', url, data)
         res = requests.post(url, data)
-        return parse_search_result_page(res.content)
+        results = parse_search_result_page(res.content)
+        qid = parse_qid(res.content)
+        return results, qid
     except Exception as ex:
         LOGGER.error(ex)
 
 
-def print_results(results):
+def print_results(results, start_idx=0):
     indent = ' ' * 4
     wrapper = textwrap.TextWrapper(width=80,
                                    initial_indent=indent,
@@ -109,7 +123,7 @@ def print_results(results):
     fmt = wrapper.fill
     print()
     for i, result in enumerate(results):
-        idx = (str(i+1) + '.').ljust(3)  # 'dd.'
+        idx = (str(start_idx+i+1) + '.').ljust(3)  # 'dd.'
         title = result['title']
         link = result['link']
         description = result['description']
@@ -140,6 +154,14 @@ def parse_search_result_page(page):
     return results
 
 
+def parse_qid(page):
+    tree = html.fromstring(page)
+    for form in tree.forms:
+        for inp in form.inputs:
+            if inp.name == 'qid':
+                return inp.value
+
+
 def get_prompt():
     color = colorama.Back.MAGENTA + colorama.Fore.BLACK
     color_reset = colorama.Back.RESET + colorama.Fore.RESET
@@ -150,7 +172,10 @@ class SpREPL():
     def __init__(self, args):
         self.args = args
         self.prompt = get_prompt()
+        self.query = None
         self.results = []
+        self.page = 0
+        self.qid = None
 
     def once(self, cmd):
         self._handle_cmd(cmd)
@@ -177,6 +202,17 @@ class SpREPL():
             SpArgumentParser.print_prompt_help()
         elif cmd == 'q':
             sys.exit(0)
+        elif cmd == 'n':
+            self.page += 1
+            self.results, self.qid = search(self.query, page=self.page, qid=self.qid)
+            print_results(self.results, start_idx=self.page*10)
+        elif cmd == 'p':
+            if self.page > 0:
+                self.page -= 1
+                self.results, self.qid = search(self.query,
+                                                page=self.page,
+                                                qid=self.qid)
+                print_results(self.results, start_idx=self.page*10)
         elif cmd[0] == 'c' and len(cmd.split()) > 1:
             sub_cmds = cmd.split()
             if sub_cmds[1].isdigit():
@@ -196,8 +232,9 @@ class SpREPL():
                 result = self.results[idx-1]
                 webbrowser.open_new_tab(result['link'])
         else:
-            query = '+'.join(cmd.split())
-            self.results = search(query)
+            self.page = 0
+            self.query = '+'.join(cmd.split())
+            self.results, self.qid = search(self.query, qid=self.qid)
             print_results(self.results)
 
 
