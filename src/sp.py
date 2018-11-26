@@ -22,6 +22,7 @@ import textwrap
 import argparse
 import requests
 import colorama
+import webbrowser
 from lxml import html
 
 try:
@@ -48,8 +49,9 @@ Website: https://github.com/garee/sp
 """
 
 PROMPT_HELP_MSG = """
-? show help
-q exit
+1..10 open search result in web browser
+?     show help
+q     exit
 """
 
 
@@ -86,8 +88,7 @@ def search(query):
     }
     try:
         res = requests.post(url, data)
-        results = parse_search_result_page(res.content)
-        print_results(results)
+        return parse_search_result_page(res.content)
     except Exception as ex:
         LOGGER.error(ex)
 
@@ -102,7 +103,7 @@ def print_results(results):
     for i, result in enumerate(results):
         idx = (str(i+1) + '.').ljust(3)  # 'dd.'
         title = result['title']
-        link = result['subtitle']
+        link = result['link']
         description = result['description']
         print(colorama.Fore.CYAN + idx, end=' ')
         print(colorama.Fore.MAGENTA + title)
@@ -125,7 +126,7 @@ def parse_search_result_page(page):
         description = description_nodes[0].text_content()
         results.append({
             'title': title,
-            'subtitle': subtitle,
+            'link': subtitle,
             'description': description
         })
     return results
@@ -141,6 +142,7 @@ class SpREPL():
     def __init__(self, args):
         self.args = args
         self.prompt = get_prompt()
+        self.results = []
 
     def once(self, cmd):
         self._handle_cmd(cmd)
@@ -166,9 +168,15 @@ class SpREPL():
         elif cmd == 'q':
             print(FAREWELL_MSG)
             sys.exit(0)
+        elif cmd.isdigit():
+            idx = int(cmd)
+            if idx >= 1 and idx <= len(self.results):
+                result = self.results[idx-1]
+                webbrowser.open_new_tab(result['link'])
         else:
             query = '+'.join(cmd.split())
-            search(query)
+            self.results = search(query)
+            print_results(self.results)
 
 
 class SpArgumentParser(argparse.ArgumentParser):
