@@ -209,6 +209,7 @@ def init():
 def init_from_args(args):
     if args.debug:
         init_debug_logging()
+        LOGGER.debug('Arguments: %s', ' '.join(sys.argv[1:]))
 
 
 def start_repl(args):
