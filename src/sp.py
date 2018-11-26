@@ -18,6 +18,7 @@
 import sys
 import signal
 import logging
+import atexit
 import textwrap
 import argparse
 import requests
@@ -37,7 +38,7 @@ LOGGER = logging.getLogger(__name__)
 
 PROMPT = 'sp (? for help)'
 
-FAREWELL_MSG = 'Goodbye.'
+FAREWELL_MSG = 'Goodbye!'
 
 DESCRIPTION = 'Search Startpage.com from the terminal.'
 
@@ -55,6 +56,11 @@ q     exit
 """
 
 
+@atexit.register
+def on_exit():
+    print(FAREWELL_MSG)
+
+
 def configure_logging():
     fmt = '%(asctime)s - %(levelname)s - %(message)s'
     logging.basicConfig(format=fmt)
@@ -68,7 +74,6 @@ def init_debug_logging():
 
 def configure_sigint_handler():
     def _sigint_handler(_signum, _frame):
-        print(f'\n{FAREWELL_MSG}', file=sys.stderr)
         sys.exit(1)
     try:
         signal.signal(signal.SIGINT, _sigint_handler)
@@ -166,7 +171,6 @@ class SpREPL():
         if cmd == '?':
             SpArgumentParser.print_prompt_help()
         elif cmd == 'q':
-            print(FAREWELL_MSG)
             sys.exit(0)
         elif cmd.isdigit():
             idx = int(cmd)
