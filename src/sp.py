@@ -98,6 +98,7 @@ def print_results(results):
                                    initial_indent=indent,
                                    subsequent_indent=indent)
     fmt = wrapper.fill
+    print()
     for i, result in enumerate(results):
         idx = (str(i+1) + '.').ljust(3)  # 'dd.'
         title = result['title']
