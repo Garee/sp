@@ -55,6 +55,7 @@ PROMPT_HELP_MSG = """
 c 1..10 copy the search result link to the clipboard
 ?       show help
 q       exit
+*       all other inputs are treated as new search keywords
 """
 
 
