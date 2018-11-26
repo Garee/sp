@@ -97,16 +97,17 @@ def print_results(results):
     wrapper = textwrap.TextWrapper(width=80,
                                    initial_indent=indent,
                                    subsequent_indent=indent)
+    fmt = wrapper.fill
     for i, result in enumerate(results):
         idx = (str(i+1) + '.').ljust(3)  # 'dd.'
         title = result['title']
         link = result['subtitle']
         description = result['description']
         print(colorama.Fore.CYAN + idx, end=' ')
-        print(colorama.Fore.MAGENTA + title, end=' ')
-        print(colorama.Fore.BLUE + '[' + link + ']')
+        print(colorama.Fore.MAGENTA + title)
+        print(fmt(colorama.Fore.BLUE + link))
         if description:
-            print(wrapper.fill(colorama.Fore.WHITE + description))
+            print(fmt(colorama.Fore.WHITE + description))
         print()
 
 
