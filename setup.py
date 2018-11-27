@@ -4,7 +4,7 @@ import re
 import setuptools
 
 with open('src/sp.py') as f:
-    VERSION = re.search(r'_VERSION_ = \'(.*?)\'', f.read()).group(1)
+    VERSION = re.search(r'_VERSION_ = "(.*?)"', f.read()).group(1)
 
 with open('README.md') as f:
     README = f.read()
@@ -28,6 +28,12 @@ setuptools.setup(
             'sp = sp:main',
         ],
     },
+    install_requires=[
+        'colorama>0.4.1',
+        'lxml>4.2.5'
+        'pyperclip>1.7.0',
+        'requests>2.20.1'
+    ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
