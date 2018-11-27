@@ -21,9 +21,9 @@ import logging
 import atexit
 import textwrap
 import argparse
+import webbrowser
 import requests
 import colorama
-import webbrowser
 import pyperclip
 from lxml import html
 
@@ -33,15 +33,15 @@ except ImportError:
     pass  # Unavailable on Windows.
 
 
-_VERSION_ = '1.0.0.dev1'
+_VERSION_ = "1.0.0.dev1"
 
 LOGGER = logging.getLogger(__name__)
 
-PROMPT = 'sp (? for help)'
+PROMPT = "sp (? for help)"
 
-FAREWELL_MSG = 'Goodbye!'
+FAREWELL_MSG = "Goodbye!"
 
-DESCRIPTION = 'Search Startpage.com from the terminal.'
+DESCRIPTION = "Search Startpage.com from the terminal."
 
 INFO_MSG = f"""
 Version {_VERSION_}
@@ -60,6 +60,8 @@ q       exit
 *       all other inputs are treated as new search keywords
 """
 
+INVALID_IDX_MSG = "Invalid search result index."
+
 
 @atexit.register
 def on_exit():
@@ -67,19 +69,20 @@ def on_exit():
 
 
 def configure_logging():
-    fmt = '%(asctime)s - %(levelname)s - %(message)s'
+    fmt = "%(asctime)s - %(levelname)s - %(message)s"
     logging.basicConfig(format=fmt)
 
 
 def init_debug_logging():
     LOGGER.setLevel(logging.DEBUG)
-    LOGGER.debug('Version %s', _VERSION_)
-    LOGGER.debug('Python version %s', get_python_version())
+    LOGGER.debug("Version %s", _VERSION_)
+    LOGGER.debug("Python version %s", get_python_version())
 
 
 def configure_sigint_handler():
     def _sigint_handler(_signum, _frame):
         sys.exit(1)
+
     try:
         signal.signal(signal.SIGINT, _sigint_handler)
     except ValueError as ex:
@@ -87,26 +90,26 @@ def configure_sigint_handler():
 
 
 def get_python_version():
-    return '%d.%d.%d' % sys.version_info[:3]
+    return "%d.%d.%d" % sys.version_info[:3]
 
 
-def search(query, page=0, qid=''):
-    url = 'https://www.startpage.com/do/search'
+def search(query, page=0, qid=""):
+    url = "https://www.startpage.com/do/search"
     data = {
-        'cmd': 'process_search',
-        'query': query,
-        'startat': page*10,
-        'rcount': int(page/2),
-        'qid': qid,
-        'abp': -1,
-        'cat': 'web',
-        'engine0': 'v1all',
-        'language': 'english',
-        'rl': 'NONE',
-        't': 'default'
+        "cmd": "process_search",
+        "query": query,
+        "startat": page * 10,
+        "rcount": int(page / 2),
+        "qid": qid,
+        "abp": -1,
+        "cat": "web",
+        "engine0": "v1all",
+        "language": "english",
+        "rl": "NONE",
+        "t": "default",
     }
     try:
-        LOGGER.debug('%s %s', url, data)
+        LOGGER.debug("%s %s", url, data)
         res = requests.post(url, data)
         results = parse_search_result_page(res.content)
         qid = parse_qid(res.content)
@@ -116,18 +119,18 @@ def search(query, page=0, qid=''):
 
 
 def print_results(results, start_idx=0):
-    indent = ' ' * 4
-    wrapper = textwrap.TextWrapper(width=80,
-                                   initial_indent=indent,
-                                   subsequent_indent=indent)
+    indent = " " * 4
+    wrapper = textwrap.TextWrapper(
+        width=80, initial_indent=indent, subsequent_indent=indent
+    )
     fmt = wrapper.fill
     print()
     for i, result in enumerate(results):
-        idx = (str(start_idx+i+1) + '.').ljust(3)  # 'dd.'
-        title = result['title']
-        link = result['link']
-        description = result['description']
-        print(colorama.Fore.CYAN + idx, end=' ')
+        idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
+        title = result["title"]
+        link = result["link"]
+        description = result["description"]
+        print(colorama.Fore.CYAN + idx, end=" ")
         print(colorama.Fore.MAGENTA + title)
         print(fmt(colorama.Fore.BLUE + link))
         if description:
@@ -138,19 +141,15 @@ def print_results(results, start_idx=0):
 def parse_search_result_page(page):
     results = []
     tree = html.fromstring(page)
-    result_nodes = tree.find_class('search-result')
+    result_nodes = tree.find_class("search-result")
     for node in result_nodes:
-        title_nodes = node.find_class('search-item__title')
-        subtitle_nodes = node.find_class('search-item__sub-title')
-        description_nodes = node.find_class('search-item__body')
-        title = title_nodes[0].xpath('a')[0].text_content()
-        subtitle = subtitle_nodes[0].xpath('span')[0].text_content()
+        title_nodes = node.find_class("search-item__title")
+        subtitle_nodes = node.find_class("search-item__sub-title")
+        description_nodes = node.find_class("search-item__body")
+        title = title_nodes[0].xpath("a")[0].text_content()
+        subtitle = subtitle_nodes[0].xpath("span")[0].text_content()
         description = description_nodes[0].text_content()
-        results.append({
-            'title': title,
-            'link': subtitle,
-            'description': description
-        })
+        results.append({"title": title, "link": subtitle, "description": description})
     return results
 
 
@@ -158,24 +157,37 @@ def parse_qid(page):
     tree = html.fromstring(page)
     for form in tree.forms:
         for inp in form.inputs:
-            if inp.name == 'qid':
+            if inp.name == "qid":
                 return inp.value
+    return ""
 
 
 def get_prompt():
     color = colorama.Back.MAGENTA + colorama.Fore.BLACK
     color_reset = colorama.Back.RESET + colorama.Fore.RESET
-    return color + PROMPT + color_reset + ' '
+    return color + PROMPT + color_reset + " "
 
 
-class SpREPL():
+class SpREPL:
     def __init__(self, args):
         self.args = args
         self.prompt = get_prompt()
         self.query = None
         self.results = []
-        self.page = 0
+        self.page = None
         self.qid = None
+        self.actions = [
+            {"match": lambda cmd: cmd is None, "action": lambda cmd: None},
+            {"match": "?", "action": lambda cmd: SpArgumentParser.print_prompt_help()},
+            {"match": "n", "action": self._on_matches_next},
+            {"match": "p", "action": self._on_matches_prev},
+            {"match": self._matches_copy_link, "action": self._on_matches_copy_link},
+            {
+                "match": lambda cmd: cmd.isdigit(),
+                "action": self._on_matches_open_result,
+            },
+            {"match": "q", "action": lambda cmd: sys.exit(0)},
+        ]
 
     def once(self, cmd):
         self._handle_cmd(cmd)
@@ -191,51 +203,63 @@ class SpREPL():
                 cmd = input(self.prompt)
             except EOFError:
                 sys.exit(0)
-            cmd = ' '.join(cmd.split())
+            cmd = " ".join(cmd.split())
             if cmd:
                 return cmd
 
     def _handle_cmd(self, cmd):
-        if not cmd:
-            return
-        if cmd == '?':
-            SpArgumentParser.print_prompt_help()
-        elif cmd == 'q':
-            sys.exit(0)
-        elif cmd == 'n':
+        def matches(cmd, action):
+            if callable(action["match"]):
+                return action["match"](cmd)
+            return cmd == action["match"]
+
+        action_filter = filter(lambda a: matches(cmd, a), self.actions)
+        action = next(action_filter, {"action": self._search})
+        action["action"](cmd)
+
+    def _on_matches_next(self, _cmd=None):
+        if self.page is not None:
             self.page += 1
             self.results, self.qid = search(self.query, page=self.page, qid=self.qid)
-            print_results(self.results, start_idx=self.page*10)
-        elif cmd == 'p':
-            if self.page > 0:
-                self.page -= 1
-                self.results, self.qid = search(self.query,
-                                                page=self.page,
-                                                qid=self.qid)
-                print_results(self.results, start_idx=self.page*10)
-        elif cmd[0] == 'c' and len(cmd.split()) > 1:
-            sub_cmds = cmd.split()
-            if sub_cmds[1].isdigit():
-                idx = int(sub_cmds[1])
-                if idx >= 1 and idx <= len(self.results):
-                    result = self.results[idx-1]
-                    link = result['link']
-                    pyperclip.copy(link)
-                    print(f'Copied link: {link}')
-                else:
-                    print('Invalid search result index.')
+            print_results(self.results, start_idx=self.page * 10)
+
+    def _on_matches_prev(self, _cmd=None):
+        if self.page and self.page > 0:
+            self.page -= 1
+            self.results, self.qid = search(self.query, page=self.page, qid=self.qid)
+            print_results(self.results, start_idx=self.page * 10)
+
+    def _matches_copy_link(self, cmd):
+        return cmd[0] == "c" and len(cmd.split()) > 1
+
+    def _on_matches_copy_link(self, cmd):
+        sub_cmds = cmd.split()
+        first_cmd = sub_cmds[1]
+        if first_cmd.isdigit():
+            idx = int(first_cmd)
+            if 0 < idx <= len(self.results):
+                result = self.results[idx - 1]
+                link = result["link"]
+                pyperclip.copy(link)
+                print(f"Copied link: {link}")
             else:
-                print('Invalid search result index.')
-        elif cmd.isdigit():
-            idx = int(cmd)
-            if idx >= 1 and idx <= len(self.results):
-                result = self.results[idx-1]
-                webbrowser.open_new_tab(result['link'])
+                print(INVALID_IDX_MSG)
         else:
-            self.page = 0
-            self.query = '+'.join(cmd.split())
-            self.results, self.qid = search(self.query, qid=self.qid)
-            print_results(self.results)
+            print(INVALID_IDX_MSG)
+
+    def _on_matches_open_result(self, cmd):
+        idx = int(cmd)
+        if 0 < idx <= len(self.results):
+            result = self.results[idx - 1]
+            webbrowser.open_new_tab(result["link"])
+        else:
+            print(INVALID_IDX_MSG)
+
+    def _search(self, cmd):
+        self.page = 0
+        self.query = "+".join(cmd.split())
+        self.results, self.qid = search(self.query, qid=self.qid)
+        print_results(self.results)
 
 
 class SpArgumentParser(argparse.ArgumentParser):
@@ -256,15 +280,11 @@ class SpArgumentParser(argparse.ArgumentParser):
 
 def parse_args():
     parser = SpArgumentParser(description=DESCRIPTION)
-    parser.add_argument('keywords',
-                        nargs='*',
-                        help='search keywords')
-    parser.add_argument('-d', '--debug',
-                        action='store_true',
-                        help='enable debug logging')
-    parser.add_argument('-v', '--version',
-                        action='version',
-                        version=_VERSION_)
+    parser.add_argument("keywords", nargs="*", help="search keywords")
+    parser.add_argument(
+        "-d", "--debug", action="store_true", help="enable debug logging"
+    )
+    parser.add_argument("-v", "--version", action="version", version=_VERSION_)
     return parser.parse_args()
 
 
@@ -277,14 +297,19 @@ def init():
 def init_from_args(args):
     if args.debug:
         init_debug_logging()
-        LOGGER.debug('Arguments: %s', ' '.join(sys.argv[1:]))
+        LOGGER.debug("Arguments: %s", " ".join(sys.argv[1:]))
+    if args.keywords:
+        try:
+            readline.add_history(" ".join(args.keywords))
+        except Exception:
+            pass  # Unavailable on Windows.
 
 
 def start_repl(args):
     try:
         repl = SpREPL(args)
         if args.keywords:
-            cmd = ' '.join(args.keywords)
+            cmd = " ".join(args.keywords)
             repl.once(cmd)
         else:
             repl.loop()
@@ -303,5 +328,5 @@ def main():
     start_repl(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
