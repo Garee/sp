@@ -1,9 +1,10 @@
-<h1 style="text-align: center">sp</h1>
+<h1 align="center">sp</h1>
 
 `sp` is a command line utility to search Startpage.com from the terminal.
 
 It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googler](https://github.com/jarun/googler).
 
+<a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a>
 
 ## Development Quick Start
 
