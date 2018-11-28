@@ -118,26 +118,6 @@ def search(query, page=0, qid=""):
         LOGGER.error(ex)
 
 
-def print_results(results, start_idx=0):
-    indent = " " * 4
-    wrapper = textwrap.TextWrapper(
-        width=80, initial_indent=indent, subsequent_indent=indent
-    )
-    fmt = wrapper.fill
-    print()
-    for i, result in enumerate(results):
-        idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
-        title = result["title"]
-        link = result["link"]
-        description = result["description"]
-        print(colorama.Fore.CYAN + idx, end=" ")
-        print(colorama.Fore.MAGENTA + title)
-        print(fmt(colorama.Fore.BLUE + link))
-        if description:
-            print(fmt(colorama.Fore.WHITE + description))
-        print()
-
-
 def parse_search_result_page(page):
     results = []
     tree = html.fromstring(page)
@@ -162,16 +142,10 @@ def parse_qid(page):
     return ""
 
 
-def get_prompt():
-    color = colorama.Back.MAGENTA + colorama.Fore.BLACK
-    color_reset = colorama.Back.RESET + colorama.Fore.RESET
-    return color + PROMPT + color_reset + " "
-
-
 class SpREPL:
     def __init__(self, args):
         self.args = args
-        self.prompt = get_prompt()
+        self.prompt = self._get_prompt()
         self.query = None
         self.results = []
         self.page = None
@@ -189,7 +163,8 @@ class SpREPL:
             {"match": "q", "action": lambda cmd: sys.exit(0)},
         ]
 
-    def once(self, cmd):
+    def once(self):
+        cmd = " ".join(self.args.keywords)
         self._handle_cmd(cmd)
 
     def loop(self):
@@ -221,13 +196,13 @@ class SpREPL:
         if self.page is not None:
             self.page += 1
             self.results, self.qid = search(self.query, page=self.page, qid=self.qid)
-            print_results(self.results, start_idx=self.page * 10)
+            self.print_results(self.results, start_idx=self.page * 10)
 
     def _on_matches_prev(self, _cmd=None):
         if self.page and self.page > 0:
             self.page -= 1
             self.results, self.qid = search(self.query, page=self.page, qid=self.qid)
-            print_results(self.results, start_idx=self.page * 10)
+            self.print_results(self.results, start_idx=self.page * 10)
 
     def _matches_copy_link(self, cmd):
         return cmd[0] == "c" and len(cmd.split()) > 1
@@ -259,7 +234,54 @@ class SpREPL:
         self.page = 0
         self.query = "+".join(cmd.split())
         self.results, self.qid = search(self.query, qid=self.qid)
-        print_results(self.results)
+        self.print_results(self.results)
+
+    def print_results(self, results, start_idx=0):
+        print()
+        for i, result in enumerate(results):
+            idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
+            self._print_idx(idx)
+            self._print_title(result["title"])
+            self._print_link(result["link"])
+            if result["description"]:
+                self._print_description(result["description"])
+            print()
+
+    def _print_idx(self, idx):
+        color = colorama.Fore.CYAN
+        if self.args.noColor:
+            color = colorama.Style.RESET_ALL
+        print(color + idx, end=" ")
+
+    def _print_title(self, title):
+        color = colorama.Fore.MAGENTA
+        if self.args.noColor:
+            color = colorama.Style.RESET_ALL
+        print(color + title)
+
+    def _print_link(self, link):
+        color = colorama.Fore.BLUE
+        if self.args.noColor:
+            color = colorama.Style.RESET_ALL
+        print(self._fmt_text(color + link))
+
+    def _print_description(self, desc):
+        color = colorama.Style.RESET_ALL
+        print(self._fmt_text(color + desc))
+
+    def _fmt_text(self, text):
+        indent = " " * 4
+        wrapper = textwrap.TextWrapper(
+            width=80, initial_indent=indent, subsequent_indent=indent
+        )
+        return wrapper.fill(text)
+
+    def _get_prompt(self):
+        color = colorama.Back.MAGENTA + colorama.Fore.BLACK
+        reset = colorama.Style.RESET_ALL
+        if self.args.noColor:
+            color = reset
+        return color + PROMPT + reset + " "
 
 
 class SpArgumentParser(argparse.ArgumentParser):
@@ -282,6 +304,9 @@ def parse_args():
     parser = SpArgumentParser(description=DESCRIPTION)
     parser.add_argument("keywords", nargs="*", help="search keywords")
     parser.add_argument(
+        "--no-color", action="store_true", dest="noColor", help="disable color output"
+    )
+    parser.add_argument(
         "-d", "--debug", action="store_true", help="enable debug logging"
     )
     parser.add_argument("-v", "--version", action="version", version=_VERSION_)
@@ -291,13 +316,14 @@ def parse_args():
 def init():
     configure_logging()
     configure_sigint_handler()
-    colorama.init()
 
 
 def init_from_args(args):
     if args.debug:
         init_debug_logging()
         LOGGER.debug("Arguments: %s", " ".join(sys.argv[1:]))
+    if not args.noColor:
+        colorama.init(autoreset=True)
     if args.keywords:
         try:
             readline.add_history(" ".join(args.keywords))
@@ -309,8 +335,7 @@ def start_repl(args):
     try:
         repl = SpREPL(args)
         if args.keywords:
-            cmd = " ".join(args.keywords)
-            repl.once(cmd)
+            repl.once()
         else:
             repl.loop()
     except Exception as ex:
