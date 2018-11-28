@@ -6,6 +6,54 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 <a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a>
 
+## Command Line Usage
+
+```sh
+$ sp -h
+usage: sp.py [-h] [--no-color] [-d] [-v] [keywords [keywords ...]]
+
+Search Startpage.com from the terminal.
+
+positional arguments:
+  keywords       search keywords
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --no-color     disable color output
+  -d, --debug    enable debug logging
+  -v, --version  show program's version number and exit
+
+Version 1.0.0.dev1
+Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
+License: GPLv3
+Website: https://github.com/garee/sp
+```
+
+## Interactive Mode Usage
+
+```sh
+n       view the next set of results
+p       view the previous set of results
+1..10   open search result in web browser
+c 1..10 copy the search result link to the clipboard
+?       show help
+q       exit
+*       all other inputs are treated as new search keywords
+```
+
+## Examples
+
+Display the first ten search results for the keyword 'Python':
+```sh
+$ sp Python
+
+1.  Welcome to Python.org
+    https://www.python.org/
+    The official home of the Python Programming Language.
+
+...
+```
+
 ## Development Quick Start
 
 Create and activate a virtual environment.
@@ -18,6 +66,12 @@ Install the dependencies.
 
 ```sh
 $ pip install -r requirements.txt
+```
+
+Format the code.
+
+```sh
+$ black src/*.py
 ```
 
 Run static analysis on the code.

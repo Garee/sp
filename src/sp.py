@@ -236,10 +236,10 @@ class SpREPL:
         for i, result in enumerate(results):
             idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
             self._print_idx(idx)
-            self._print_title(result['title'])
-            self._print_link(result['link'])
-            if result['description']:
-                self._print_description(result['description'])
+            self._print_title(result["title"])
+            self._print_link(result["link"])
+            if result["description"]:
+                self._print_description(result["description"])
             print()
 
     def _print_idx(self, idx):
@@ -298,7 +298,9 @@ class SpArgumentParser(argparse.ArgumentParser):
 def parse_args():
     parser = SpArgumentParser(description=DESCRIPTION)
     parser.add_argument("keywords", nargs="*", help="search keywords")
-    parser.add_argument('--no-color', action="store_true", dest="noColor", help="disable color output")
+    parser.add_argument(
+        "--no-color", action="store_true", dest="noColor", help="disable color output"
+    )
     parser.add_argument(
         "-d", "--debug", action="store_true", help="enable debug logging"
     )
@@ -309,6 +311,7 @@ def parse_args():
 def init():
     configure_logging()
     configure_sigint_handler()
+
 
 def init_from_args(args):
     if args.debug:
