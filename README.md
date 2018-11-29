@@ -19,6 +19,7 @@ positional arguments:
 
 optional arguments:
   -h, --help     show this help message and exit
+  -t SPAN, --time SPAN  time limit search to 1 d|w|m|y (day,week,month,year)
   --no-color     disable color output
   -d, --debug    enable debug logging
   -v, --version  show program's version number and exit

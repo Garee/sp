@@ -117,13 +117,17 @@ class SpREPL:
     def _on_matches_next(self, _cmd=None):
         if self.page is not None:
             self.page += 1
-            self.results = self.searcher.search(self.query, page=self.page)
+            self.results = self.searcher.search(
+                self.query, page=self.page, with_date=self.args.timespan
+            )
             self.print_results(self.results, start_idx=self.page * 10)
 
     def _on_matches_prev(self, _cmd=None):
         if self.page and self.page > 0:
             self.page -= 1
-            self.results = self.searcher.search(self.query, page=self.page)
+            self.results = self.searcher.search(
+                self.query, page=self.page, with_date=self.args.timespan
+            )
             self.print_results(self.results, start_idx=self.page * 10)
 
     def _matches_copy_link(self, cmd):
@@ -155,7 +159,7 @@ class SpREPL:
     def _search(self, cmd):
         self.page = 0
         self.query = "+".join(cmd.split())
-        self.results = self.searcher.search(self.query)
+        self.results = self.searcher.search(self.query, with_date=self.args.timespan)
         self.print_results(self.results)
 
     def print_results(self, results, start_idx=0):
@@ -213,7 +217,7 @@ class SpSearcher:
         self.page_size = 10
         self.qid = ""
 
-    def search(self, query, page=0):
+    def search(self, query, page=0, with_date=""):
         data = {
             "cmd": "process_search",
             "query": query,
@@ -226,6 +230,7 @@ class SpSearcher:
             "language": "english",
             "rl": "NONE",
             "t": "default",
+            "with_date": with_date,  # y, m, w, d
         }
         try:
             res = requests.post(self.search_url, data)
@@ -263,6 +268,15 @@ class SpArgumentParser(argparse.ArgumentParser):
     def __init__(self):
         super().__init__(description=MSG["description"])
         self.add_argument("keywords", nargs="*", help="search keywords")
+        self.add_argument(
+            "-t",
+            "--time",
+            dest="timespan",
+            metavar="SPAN",
+            default="",
+            choices=["d", "w", "m", "y"],
+            help="time limit search to 1 d|w|m|y (day,week,month,year)",
+        )
         self.add_argument(
             "--no-color",
             action="store_true",
