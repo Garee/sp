@@ -40,11 +40,14 @@ MSG = {
     "prompt": "sp (? for help)",
     "farewell": "Goodbye!",
     "description": "Search Startpage.com from the terminal.",
-    "info": f"""
-Version {_VERSION_}
+    "info": (
+        """
+Version %s
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
-Website: https://github.com/garee/sp""",
+Website: https://github.com/garee/sp"""
+        % _VERSION_
+    ),
     "help": """    n       view the next set of results
     p       view the previous set of results
     1..10   open search result in web browser
@@ -142,7 +145,7 @@ class SpREPL:
                 result = self.results[idx - 1]
                 link = result["link"]
                 pyperclip.copy(link)
-                print(f"Copied link: {link}")
+                print("Copied link: %s" % link)
             else:
                 print(MSG["invalid_index"])
         else:
