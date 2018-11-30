@@ -147,9 +147,9 @@ class SpREPL:
                 pyperclip.copy(link)
                 print("Copied link: %s" % link)
             else:
-                print(MSG["invalid_index"])
+                print(MSG["invalid_idx"])
         else:
-            print(MSG["invalid_index"])
+            print(MSG["invalid_idx"])
 
     def _on_matches_open_result(self, cmd):
         idx = int(cmd)
@@ -157,7 +157,7 @@ class SpREPL:
             result = self.results[idx - 1]
             webbrowser.open_new_tab(result["link"])
         else:
-            print(MSG["invalid_index"])
+            print(MSG["invalid_idx"])
 
     def _search(self, cmd):
         self.page = 0
