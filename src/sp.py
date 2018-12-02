@@ -59,6 +59,10 @@ Website: https://github.com/garee/sp"""
     *          all other inputs are treated as new search keywords
     """,
     "invalid_idx": "Invalid search result index.",
+    "invalid_browser": (
+        "Failed to locate configured web browser '%s'. "
+        "The system default will be used."
+    ),
 }
 
 
@@ -170,9 +174,18 @@ class SpREPL:
         idx = int(cmd)
         if 0 < idx <= len(self.results):
             result = self.results[idx - 1]
-            webbrowser.open_new_tab(result["link"])
+            browser = self._get_web_browser()
+            browser.open_new_tab(result["link"])
         else:
             print(MSG["invalid_idx"])
+
+    def _get_web_browser(self):
+        if self.args.browser:
+            try:
+                return webbrowser.get(self.args.browser.lower())
+            except Exception:
+                print(MSG["invalid_browser"] % self.args.browser)
+        return webbrowser
 
     def _search(self, cmd):
         self.page = 0
@@ -320,6 +333,12 @@ class SpArgumentParser(argparse.ArgumentParser):
             action="store_true",
             dest="open_first",
             help="open the first result in a web browser",
+        )
+        self.add_argument(
+            "--browser",
+            dest="browser",
+            metavar="BROWSER",
+            help="open results using this web browser",
         )
         self.add_argument(
             "--no-color",
