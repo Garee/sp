@@ -126,7 +126,8 @@ class SpREPL:
         action["action"](cmd)
 
     def _on_matches_first(self, _cmd=None):
-        self._search(self.query)
+        if self.query:
+            self._search(self.query)
 
     def _on_matches_next(self, _cmd=None):
         if self.page is not None:
