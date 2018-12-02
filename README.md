@@ -57,6 +57,33 @@ $ sp Python
 ...
 ```
 
+Search `bbc.co.uk` for news about brexit:
+```
+$ sp -s bbc.co.uk brexit
+
+1.  Brexit: All you need to know about the UK leaving the EU - BBC News
+    https://www.bbc.co.uk/news/uk-politics-32810887
+    Here is an easy-to-understand guide to Brexit - beginning with the
+    basics, then a look at the current negotiations, followed by a selection of
+    answers to questions ...
+
+...
+```
+
+Search for football results from the past 24 hours:
+```
+$ sp -t d Football
+
+1.  Watch: Liverpool loanee Harry Wilson scores ... - Planet Football
+    https://www.planetfootball.com/videos/watch-liverpool-loanee-harry-
+    wilson-scores-screamer-for-derby/
+    Planet Football; 1st December 2018. Harry Wilson has been making a name
+    for himself on loan at Derby from Liverpool this season – and on Saturday he
+    added  ...
+
+...
+```
+
 ## Development Quick Start
 
 Create and activate a virtual environment.
