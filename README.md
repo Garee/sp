@@ -37,6 +37,7 @@ Website: https://github.com/garee/sp
 ## Interactive Mode Usage
 
 ```
+f          view the first set of results
 n          view the next set of results
 p          view the previous set of results
 1..10      open search result in web browser

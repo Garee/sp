@@ -48,7 +48,8 @@ License: GPLv3
 Website: https://github.com/garee/sp"""
         % _VERSION_
     ),
-    "help": """    n          view the next set of results
+    "help": """    f          view the first set of results
+    n          view the next set of results
     p          view the previous set of results
     1..10      open search result in web browser
     c 1..10    copy the search result link to the clipboard
@@ -71,6 +72,7 @@ class SpREPL:
         self.actions = [
             {"match": lambda cmd: cmd is None, "action": lambda cmd: None},
             {"match": "?", "action": lambda cmd: SpArgumentParser.print_prompt_help()},
+            {"match": "f", "action": self._on_matches_first},
             {"match": "n", "action": self._on_matches_next},
             {"match": "p", "action": self._on_matches_prev},
             {"match": "s", "action": self._search},
@@ -118,6 +120,9 @@ class SpREPL:
         action_filter = filter(lambda a: matches(cmd, a), self.actions)
         action = next(action_filter, {"action": self._search})
         action["action"](cmd)
+
+    def _on_matches_first(self, _cmd=None):
+        self._search(self.query)
 
     def _on_matches_next(self, _cmd=None):
         if self.page is not None:
