@@ -82,11 +82,11 @@ class SpREPL:
         self.searcher = SpSearcher()
 
     def start(self, before_loop=lambda: None):
-        if self.args.keywords:
-            self.once()
-        if not self.args.keywords or self.args.interactive:
+        if self._should_loop():
             before_loop()
             self.loop()
+        else:
+            self.once()
 
     def once(self):
         cmd = " ".join(self.args.keywords)
@@ -173,7 +173,11 @@ class SpREPL:
         self.results = self.searcher.search(
             self.query, with_date=self.args.timespan, with_site=self.args.site
         )
-        self.print_results(self.results)
+        if self.args.open_first and self.args.keywords:
+            self._on_matches_open_result("1")
+            self.args.open_first = False  # Only do this once
+        else:
+            self.print_results(self.results)
 
     def print_results(self, results, start_idx=0):
         LOGGER.debug("Found %d results.", len(results))
@@ -222,6 +226,9 @@ class SpREPL:
         if self.args.noColor:
             color = colorama.Style.RESET_ALL
         return color + MSG["prompt"] + reset + " "
+
+    def _should_loop(self):
+        return not self.args.keywords or self.args.interactive
 
 
 class SpSearcher:
@@ -299,6 +306,13 @@ class SpArgumentParser(argparse.ArgumentParser):
             "--interactive",
             action="store_true",
             help="launch in interactive mode",
+        )
+        self.add_argument(
+            "-of",
+            "--open-first",
+            action="store_true",
+            dest="open_first",
+            help="open the first result in a web browser"
         )
         self.add_argument(
             "--no-color",
