@@ -10,7 +10,7 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 ```
 $ sp -h
-usage: sp.py [-h] [-t SPAN] [-s SITE] [-i] [--no-color] [-d] [-v]
+usage: sp.py [-h] [-t SPAN] [-s SITE] [-i] [-of] [--no-color] [-d] [-v]
              [keywords [keywords ...]]
 
 Search Startpage.com from the terminal.
@@ -23,6 +23,7 @@ optional arguments:
   -t SPAN, --time SPAN  time limit search to 1 d|w|m|y (day,week,month,year)
   -s SITE, --site SITE  search a site
   -i, --interactive     launch in interactive mode
+  -of, --open-first     open the first result in a web browser
   --no-color            disable color output
   -d, --debug           enable debug logging
   -v, --version         show program's version number and exit

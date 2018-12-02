@@ -312,7 +312,7 @@ class SpArgumentParser(argparse.ArgumentParser):
             "--open-first",
             action="store_true",
             dest="open_first",
-            help="open the first result in a web browser"
+            help="open the first result in a web browser",
         )
         self.add_argument(
             "--no-color",
