@@ -121,7 +121,10 @@ class SpREPL:
         if self.page is not None:
             self.page += 1
             self.results = self.searcher.search(
-                self.query, page=self.page, with_date=self.args.timespan
+                self.query,
+                page=self.page,
+                with_date=self.args.timespan,
+                with_site=self.args.site,
             )
             self.print_results(self.results, start_idx=self.page * 10)
 
@@ -129,7 +132,10 @@ class SpREPL:
         if self.page and self.page > 0:
             self.page -= 1
             self.results = self.searcher.search(
-                self.query, page=self.page, with_date=self.args.timespan
+                self.query,
+                page=self.page,
+                with_date=self.args.timespan,
+                with_site=self.args.site,
             )
             self.print_results(self.results, start_idx=self.page * 10)
 
@@ -162,7 +168,9 @@ class SpREPL:
     def _search(self, cmd):
         self.page = 0
         self.query = "+".join(cmd.split())
-        self.results = self.searcher.search(self.query, with_date=self.args.timespan)
+        self.results = self.searcher.search(
+            self.query, with_date=self.args.timespan, with_site=self.args.site
+        )
         self.print_results(self.results)
 
     def print_results(self, results, start_idx=0):
@@ -220,7 +228,9 @@ class SpSearcher:
         self.page_size = 10
         self.qid = ""
 
-    def search(self, query, page=0, with_date=""):
+    def search(self, query, page=0, with_date="", with_site=""):
+        if with_site:
+            query = "host:%s %s" % (with_site, query)
         data = {
             "cmd": "process_search",
             "query": query,
@@ -280,6 +290,7 @@ class SpArgumentParser(argparse.ArgumentParser):
             choices=["d", "w", "m", "y"],
             help="time limit search to 1 d|w|m|y (day,week,month,year)",
         )
+        self.add_argument("-s", "--site", help="search a site")
         self.add_argument(
             "--no-color",
             action="store_true",
@@ -311,10 +322,20 @@ def configure_logging():
     logging.basicConfig(format=fmt)
 
 
+def init_requests_logging():
+    import http.client
+
+    http.client.HTTPConnection.debuglevel = 1
+    requests_log = logging.getLogger("requests.packages.urllib3")
+    requests_log.setLevel(logging.DEBUG)
+    requests_log.propagate = True
+
+
 def init_debug_logging():
     LOGGER.setLevel(logging.DEBUG)
     LOGGER.debug("Version %s", _VERSION_)
     LOGGER.debug("Python version %d.%d.%d", *sys.version_info[:3])
+    init_requests_logging()
 
 
 def configure_sigint_handler():
