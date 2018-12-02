@@ -84,7 +84,7 @@ class SpREPL:
     def start(self, before_loop=lambda: None):
         if self.args.keywords:
             self.once()
-        else:
+        if not self.args.keywords or self.args.interactive:
             before_loop()
             self.loop()
 
@@ -294,6 +294,12 @@ class SpArgumentParser(argparse.ArgumentParser):
             help="time limit search to 1 d|w|m|y (day,week,month,year)",
         )
         self.add_argument("-s", "--site", help="search a site")
+        self.add_argument(
+            "-i",
+            "--interactive",
+            action="store_true",
+            help="launch in interactive mode",
+        )
         self.add_argument(
             "--no-color",
             action="store_true",
