@@ -120,3 +120,12 @@ Generate a distribution package in `./dist`.
 ```sh
 $ python setup.py sdist bdist_wheel
 ```
+
+## Proxies
+
+The requests library is used to perform the HTTP requests. You can configure proxies by [setting the environment variables](http://docs.python-requests.org/en/master/user/advanced/#proxies) `HTTP_PROXY` and `HTTPS_PROXY`.
+
+```sh
+$ export HTTP_PROXY="http://10.10.1.10:3128"
+$ export HTTPS_PROXY="http://10.10.2.10.1080"
+```
