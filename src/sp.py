@@ -126,7 +126,8 @@ class SpREPL:
                 with_date=self.args.timespan,
                 with_site=self.args.site,
             )
-            self.print_results(self.results, start_idx=self.page * 10)
+            if self.results:
+                self.print_results(self.results, start_idx=self.page * 10)
 
     def _on_matches_prev(self, _cmd=None):
         if self.page and self.page > 0:
@@ -137,7 +138,8 @@ class SpREPL:
                 with_date=self.args.timespan,
                 with_site=self.args.site,
             )
-            self.print_results(self.results, start_idx=self.page * 10)
+            if self.results:
+                self.print_results(self.results, start_idx=self.page * 10)
 
     def _matches_copy_link(self, cmd):
         return cmd[0] == "c" and len(cmd.split()) > 1
@@ -174,6 +176,7 @@ class SpREPL:
         self.print_results(self.results)
 
     def print_results(self, results, start_idx=0):
+        LOGGER.debug("Found %d results.", len(results))
         print()
         for i, result in enumerate(results):
             idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
