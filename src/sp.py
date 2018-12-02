@@ -48,13 +48,14 @@ License: GPLv3
 Website: https://github.com/garee/sp"""
         % _VERSION_
     ),
-    "help": """    n       view the next set of results
-    p       view the previous set of results
-    1..10   open search result in web browser
-    c 1..10 copy the search result link to the clipboard
-    ?       show help
-    q       exit
-    *       all other inputs are treated as new search keywords
+    "help": """    n          view the next set of results
+    p          view the previous set of results
+    1..10      open search result in web browser
+    c 1..10    copy the search result link to the clipboard
+    s KEYWORDS perform a search for KEYWORDS
+    ?          show help
+    q          exit
+    *          all other inputs are treated as new search keywords
     """,
     "invalid_idx": "Invalid search result index.",
 }
@@ -72,6 +73,7 @@ class SpREPL:
             {"match": "?", "action": lambda cmd: SpArgumentParser.print_prompt_help()},
             {"match": "n", "action": self._on_matches_next},
             {"match": "p", "action": self._on_matches_prev},
+            {"match": "s", "action": self._search},
             {"match": self._matches_copy_link, "action": self._on_matches_copy_link},
             {
                 "match": lambda cmd: cmd.isdigit(),

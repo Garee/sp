@@ -37,13 +37,14 @@ Website: https://github.com/garee/sp
 ## Interactive Mode Usage
 
 ```
-n       view the next set of results
-p       view the previous set of results
-1..10   open search result in web browser
-c 1..10 copy the search result link to the clipboard
-?       show help
-q       exit
-*       all other inputs are treated as new search keywords
+n          view the next set of results
+p          view the previous set of results
+1..10      open search result in web browser
+c 1..10    copy the search result link to the clipboard
+s KEYWORDS perform a search for KEYWORDS
+?          show help
+q          exit
+*          all other inputs are treated as new search keywords
 ```
 
 ## Examples
