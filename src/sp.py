@@ -135,8 +135,11 @@ class SpREPL:
             self.results = self.searcher.search(
                 self.query,
                 page=self.page,
-                with_date=self.args.timespan,
-                with_site=self.args.site,
+                opts={
+                    "with_date": self.args.timespan,
+                    "with_site": self.args.site,
+                    "unsafe": self.args.unsafe,
+                },
             )
             if self.results:
                 self.print_results(self.results, start_idx=self.page * 10)
@@ -147,8 +150,11 @@ class SpREPL:
             self.results = self.searcher.search(
                 self.query,
                 page=self.page,
-                with_date=self.args.timespan,
-                with_site=self.args.site,
+                opts={
+                    "with_date": self.args.timespan,
+                    "with_site": self.args.site,
+                    "unsafe": self.args.unsafe,
+                },
             )
             if self.results:
                 self.print_results(self.results, start_idx=self.page * 10)
@@ -192,7 +198,12 @@ class SpREPL:
         self.page = 0
         self.query = "+".join(cmd.split())
         self.results = self.searcher.search(
-            self.query, with_date=self.args.timespan, with_site=self.args.site
+            self.query,
+            opts={
+                "with_date": self.args.timespan,
+                "with_site": self.args.site,
+                "unsafe": self.args.unsafe,
+            },
         )
         if self.args.open_first and self.args.keywords:
             self._on_matches_open_result("1")
@@ -259,9 +270,23 @@ class SpSearcher:
         self.page_size = 10
         self.qid = ""
 
-    def search(self, query, page=0, with_date="", with_site=""):
-        if with_site:
-            query = "host:%s %s" % (with_site, query)
+    def get_opts(self, opts):
+        default_opts = {"with_date": "", "with_site": "", "unsafe": False}
+        if opts:
+            default_opts.update(opts)
+        return default_opts
+
+    def get_cookies(self, opts):
+        cookies = {}
+        if opts["unsafe"]:
+            cookies["preferences"] = "disable_family_filterEEE1N1N"
+            cookies["preferences"] += "disable_video_family_filterEEE1N1N"
+        return cookies
+
+    def search(self, query, page=0, opts=None):
+        opts = self.get_opts(opts)
+        if opts["with_site"]:
+            query = "host:%s %s" % (opts["with_site"], query)
         data = {
             "cmd": "process_search",
             "query": query,
@@ -274,10 +299,10 @@ class SpSearcher:
             "language": "english",
             "rl": "NONE",
             "t": "default",
-            "with_date": with_date,  # y, m, w, d
+            "with_date": opts["with_date"],  # y, m, w, d
         }
         try:
-            res = requests.post(self.search_url, data)
+            res = requests.post(self.search_url, data, cookies=self.get_cookies(opts))
             self.qid = self._parse_qid(res.content)
             return self.parse_search_result_page(res.content)
         except Exception as ex:
@@ -334,6 +359,9 @@ class SpArgumentParser(argparse.ArgumentParser):
             action="store_true",
             dest="open_first",
             help="open the first result in a web browser",
+        )
+        self.add_argument(
+            "-u", "--unsafe", action="store_true", help="disable the family filter"
         )
         self.add_argument(
             "--browser",
