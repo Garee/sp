@@ -10,7 +10,7 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 ```
 $ sp -h
-usage: sp.py [-h] [-t SPAN] [-s SITE] [-i] [-of] [-u] [--browser BROWSER]
+usage: sp.py [-h] [-t SPAN] [-s SITE] [-np] [-of] [-u] [--browser BROWSER]
              [--no-color] [-d] [-v]
              [keywords [keywords ...]]
 
@@ -23,7 +23,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -t SPAN, --time SPAN  time limit search to 1 d|w|m|y (day,week,month,year)
   -s SITE, --site SITE  search a site
-  -i, --interactive     launch in interactive mode
+  -np, --no-prompt      do not enter interactive mode
   -of, --open-first     open the first result in a web browser
   -u, --unsafe          disable the family filter
   --browser BROWSER     open results using this web browser

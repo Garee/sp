@@ -90,11 +90,11 @@ class SpREPL:
         self.searcher = SpSearcher()
 
     def start(self, before_loop=lambda: None):
+        if self.args.keywords:
+            self.once()
         if self._should_loop():
             before_loop()
             self.loop()
-        else:
-            self.once()
 
     def once(self):
         cmd = " ".join(self.args.keywords)
@@ -260,7 +260,7 @@ class SpREPL:
         return color + MSG["prompt"] + reset + " "
 
     def _should_loop(self):
-        return not self.args.keywords or self.args.interactive
+        return not self.args.no_prompt
 
 
 class SpSearcher:
@@ -348,10 +348,11 @@ class SpArgumentParser(argparse.ArgumentParser):
         )
         self.add_argument("-s", "--site", help="search a site")
         self.add_argument(
-            "-i",
-            "--interactive",
+            "-np",
+            "--no-prompt",
             action="store_true",
-            help="launch in interactive mode",
+            dest="no_prompt",
+            help="do not enter interactive mode",
         )
         self.add_argument(
             "-of",
