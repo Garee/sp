@@ -208,7 +208,7 @@ class SpREPL:
         if self.args.open_first and self.args.keywords:
             self._on_matches_open_result("1")
             self.args.open_first = False  # Only do this once
-        else:
+        elif self.results:
             self.print_results(self.results)
 
     def print_results(self, results, start_idx=0):
