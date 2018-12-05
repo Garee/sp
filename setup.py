@@ -29,10 +29,10 @@ setuptools.setup(
         ],
     },
     install_requires=[
-        'colorama>0.4.1',
-        'lxml>4.2.5'
-        'pyperclip>1.7.0',
-        'requests>2.20.1'
+        'colorama>=0.4.1',
+        'lxml>=4.2.5',
+        'pyperclip>=1.7.0',
+        'requests>=2.20.1'
     ],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
