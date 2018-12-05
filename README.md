@@ -11,7 +11,7 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 ```
 $ sp -h
 usage: sp.py [-h] [-t SPAN] [-s SITE] [-np] [-of] [-u] [--browser BROWSER]
-             [--no-color] [-d] [-v]
+             [--json] [--no-color] [-d] [-v]
              [keywords [keywords ...]]
 
 Search Startpage.com from the terminal.
@@ -27,6 +27,7 @@ optional arguments:
   -of, --open-first     open the first result in a web browser
   -u, --unsafe          disable the family filter
   --browser BROWSER     open results using this web browser
+  --json                output the results in JSON; implies --no-prompt
   --no-color            disable color output
   -d, --debug           enable debug logging
   -v, --version         show program's version number and exit

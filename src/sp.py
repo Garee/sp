@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import json
 import signal
 import logging
 import atexit
@@ -211,8 +212,14 @@ class SpREPL:
         elif self.results:
             self.print_results(self.results)
 
-    def print_results(self, results, start_idx=0):
-        LOGGER.debug("Found %d results.", len(results))
+    def _print_results_as_json(self, results):
+        try:
+            data = json.dumps(results, indent=2, sort_keys=True)
+            print(data)
+        except Exception as ex:
+            print(ex)
+
+    def _print_results_pretty(self, results, start_idx=0):
         print()
         for i, result in enumerate(results):
             idx = (str(start_idx + i + 1) + ".").ljust(3)  # 'dd.'
@@ -222,6 +229,13 @@ class SpREPL:
             if result["description"]:
                 self._print_description(result["description"])
             print()
+
+    def print_results(self, results, start_idx=0):
+        LOGGER.debug("Found %d results.", len(results))
+        if self.args.json:
+            self._print_results_as_json(results)
+        else:
+            self._print_results_pretty(results, start_idx)
 
     def _print_idx(self, idx):
         color = colorama.Fore.CYAN
@@ -260,7 +274,7 @@ class SpREPL:
         return color + MSG["prompt"] + reset + " "
 
     def _should_loop(self):
-        return not self.args.no_prompt
+        return not self.args.no_prompt and not self.args.json
 
 
 class SpSearcher:
@@ -369,6 +383,11 @@ class SpArgumentParser(argparse.ArgumentParser):
             dest="browser",
             metavar="BROWSER",
             help="open results using this web browser",
+        )
+        self.add_argument(
+            "--json",
+            action="store_true",
+            help="output the results in JSON; implies --no-prompt"
         )
         self.add_argument(
             "--no-color",
