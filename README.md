@@ -10,7 +10,7 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 <a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a> <a href="https://travis-ci.org/Garee/sp"><img src="https://travis-ci.org/Garee/sp.svg?branch=master" alt="Build status"></a>
 
-### Table of contents
+## Table of contents
 
 - [Installation](#installation)
 - [Usage](#usage)
