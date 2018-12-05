@@ -352,6 +352,17 @@ class SpArgumentParser(argparse.ArgumentParser):
         super().__init__(description=MSG["description"])
         self.add_argument("keywords", nargs="*", help="search keywords")
         self.add_argument(
+            "-d", "--debug", action="store_true", help="enable debug logging"
+        )
+        self.add_argument(
+            "-f",
+            "--first",
+            action="store_true",
+            dest="open_first",
+            help="open the first result in a web browser",
+        )
+        self.add_argument("-s", "--site", help="search a site")
+        self.add_argument(
             "-t",
             "--time",
             dest="timespan",
@@ -360,23 +371,16 @@ class SpArgumentParser(argparse.ArgumentParser):
             choices=["d", "w", "m", "y"],
             help="time limit search to 1 d|w|m|y (day,week,month,year)",
         )
-        self.add_argument("-s", "--site", help="search a site")
+        self.add_argument(
+            "-u", "--unsafe", action="store_true", help="disable the family filter"
+        )
+        self.add_argument("-v", "--version", action="version", version=_VERSION_)
         self.add_argument(
             "-np",
             "--no-prompt",
             action="store_true",
             dest="no_prompt",
             help="do not enter interactive mode",
-        )
-        self.add_argument(
-            "-of",
-            "--open-first",
-            action="store_true",
-            dest="open_first",
-            help="open the first result in a web browser",
-        )
-        self.add_argument(
-            "-u", "--unsafe", action="store_true", help="disable the family filter"
         )
         self.add_argument(
             "--browser",
@@ -387,7 +391,7 @@ class SpArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "--json",
             action="store_true",
-            help="output the results in JSON; implies --no-prompt"
+            help="output the results in JSON; implies --no-prompt",
         )
         self.add_argument(
             "--no-color",
@@ -395,10 +399,6 @@ class SpArgumentParser(argparse.ArgumentParser):
             dest="noColor",
             help="disable color output",
         )
-        self.add_argument(
-            "-d", "--debug", action="store_true", help="enable debug logging"
-        )
-        self.add_argument("-v", "--version", action="version", version=_VERSION_)
 
     @staticmethod
     def print_prompt_help(file=None):

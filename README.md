@@ -10,8 +10,8 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 ```
 $ sp -h
-usage: sp.py [-h] [-t SPAN] [-s SITE] [-np] [-of] [-u] [--browser BROWSER]
-             [--json] [--no-color] [-d] [-v]
+usage: sp.py [-h] [-d] [-f] [-s SITE] [-t SPAN] [-u] [-v] [-np]
+             [--browser BROWSER] [--json] [--no-color]
              [keywords [keywords ...]]
 
 Search Startpage.com from the terminal.
@@ -21,16 +21,16 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -t SPAN, --time SPAN  time limit search to 1 d|w|m|y (day,week,month,year)
+  -d, --debug           enable debug logging
+  -f, --first           open the first result in a web browser
   -s SITE, --site SITE  search a site
-  -np, --no-prompt      do not enter interactive mode
-  -of, --open-first     open the first result in a web browser
+  -t SPAN, --time SPAN  time limit search to 1 d|w|m|y (day,week,month,year)
   -u, --unsafe          disable the family filter
+  -v, --version         show program's version number and exit
+  -np, --no-prompt      do not enter interactive mode
   --browser BROWSER     open results using this web browser
   --json                output the results in JSON; implies --no-prompt
   --no-color            disable color output
-  -d, --debug           enable debug logging
-  -v, --version         show program's version number and exit
 
 Version 1.0.0.dev1
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
