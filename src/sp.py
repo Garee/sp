@@ -164,10 +164,12 @@ class SpREPL:
                 self.print_results(self.results, start_idx=self.page * 10)
 
     def _matches_copy_link(self, cmd):
-        return cmd[0] == "c" and len(cmd.split()) == 2
+        tokens = cmd.split()
+        return tokens[0] == "c" and len(tokens) == 2
 
     def _matches_search_keywords(self, cmd):
-        return cmd[0] == "s" and len(cmd.split()) > 1
+        tokens = cmd.split()
+        return tokens[0] == "s" and len(tokens) > 1
 
     def _on_matches_search_keywords(self, cmd):
         keywords = cmd.split()[1]
