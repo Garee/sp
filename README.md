@@ -10,6 +10,12 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 <a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a> <a href="https://travis-ci.org/Garee/sp"><img src="https://travis-ci.org/Garee/sp.svg?branch=master" alt="Build status"></a>
 
+## Installation
+
+```sh
+$ pip install sp
+```
+
 ## Command Line Usage
 
 ```
@@ -58,42 +64,52 @@ q          exit
 
 ## Examples
 
-Display the first ten search results for the keyword 'Python':
+1. Search for terms.
 ```
-$ sp Python
-
-1.  Welcome to Python.org
-    https://www.python.org/
-    The official home of the Python Programming Language.
-
-...
+$ sp hello world
 ```
 
-Search `bbc.co.uk` for news about brexit:
+2. Search `bbc.co.uk` for news about brexit:
 ```
 $ sp -s bbc.co.uk brexit
-
-1.  Brexit: All you need to know about the UK leaving the EU - BBC News
-    https://www.bbc.co.uk/news/uk-politics-32810887
-    Here is an easy-to-understand guide to Brexit - beginning with the
-    basics, then a look at the current negotiations, followed by a selection of
-    answers to questions ...
-
-...
 ```
 
-Search for football results from the past 24 hours:
+3. Search for results from the past 24 hours.
 ```
-$ sp -t d Football
+$ sp -t d barcelona fc
+```
 
-1.  Watch: Liverpool loanee Harry Wilson scores ... - Planet Football
-    https://www.planetfootball.com/videos/watch-liverpool-loanee-harry-
-    wilson-scores-screamer-for-derby/
-    Planet Football; 1st December 2018. Harry Wilson has been making a name
-    for himself on loan at Derby from Liverpool this season – and on Saturday he
-    added  ...
+4. Open the first result automatically
+```
+$ sp -f python docs
+```
 
-...
+5. Disable safe search.
+```
+$ sp -u pawn
+```
+
+6. Output in JSON format.
+```
+$ sp --json climate change papers
+```
+
+## Browser Support
+
+If the `BROWSER` environment variable exists, it will be used to open search results. If not, `sp` will attempt to use one from the [this list](https://docs.python.org/2/library/webbrowser.html#webbrowser.register).
+
+You can specify which browser to use using the `--browser` flag. This also accepts a path to the browser executable.
+
+```sh
+$ sp --browser firefox
+```
+## Proxies
+
+The requests library is used to perform the HTTP requests. You can configure proxies by [setting the environment variables](http://docs.python-requests.org/en/master/user/advanced/#proxies) `HTTP_PROXY` and `HTTPS_PROXY`.
+
+```sh
+$ export HTTP_PROXY="http://10.10.1.10:3128"
+$ export HTTPS_PROXY="http://10.10.2.10.1080"
 ```
 
 ## Development Quick Start
@@ -129,11 +145,12 @@ Generate a distribution package in `./dist`.
 $ python setup.py sdist bdist_wheel
 ```
 
-## Proxies
+## Troubleshooting
 
-The requests library is used to perform the HTTP requests. You can configure proxies by [setting the environment variables](http://docs.python-requests.org/en/master/user/advanced/#proxies) `HTTP_PROXY` and `HTTPS_PROXY`.
+Please [create an issue](https://github.com/Garee/sp/issues) for any problems that you encounter.
 
-```sh
-$ export HTTP_PROXY="http://10.10.1.10:3128"
-$ export HTTPS_PROXY="http://10.10.2.10.1080"
+- Disable the coloured output if it does not work correctly on your system:
+
+```
+$ sp --no-color
 ```
