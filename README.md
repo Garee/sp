@@ -1,5 +1,7 @@
 <h1 align="center">sp</h1>
 
+[![asciicast](https://asciinema.org/a/215338.svg)](https://asciinema.org/a/215338)
+
 `sp` is a command line utility to search Startpage.com from the terminal.
 
 It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googler](https://github.com/jarun/googler).
