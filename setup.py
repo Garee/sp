@@ -3,14 +3,14 @@
 import re
 import setuptools
 
-with open('src/sp.py') as f:
+with open('sp/sp.py') as f:
     VERSION = re.search(r'_VERSION_ = "(.*?)"', f.read()).group(1)
 
 with open('README.md') as f:
     README = f.read()
 
 setuptools.setup(
-    name='sp',
+    name='spcli',
     version=VERSION,
     url='https://github.com/garee/sp',
     license='GPLv3',
@@ -22,7 +22,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires='>=3.4',
     platforms=['any'],
-    py_modules=['src/sp'],
+    py_modules=['sp/sp'],
     entry_points={
         'console_scripts': [
             'sp = sp:main',
@@ -35,7 +35,7 @@ setuptools.setup(
         'requests>=2.20.1'
     ],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',

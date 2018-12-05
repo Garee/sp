@@ -6,4 +6,4 @@ python:
 install:
   pip install -r requirements.txt
 script:
-  pylint src/*.py && flake8 src/*.py
+  pylint sp/*.py && flake8 sp/*.py

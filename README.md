@@ -25,7 +25,7 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 ## Installation
 
 ```sh
-$ pip install sp
+$ pip install spcli
 ```
 
 ## Usage
@@ -56,7 +56,7 @@ optional arguments:
   --json                output the results in JSON; implies --no-prompt
   --no-color            disable color output
 
-Version 1.0.0.dev1
+Version 1.0.0
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
 Website: https://github.com/garee/sp
@@ -143,14 +143,14 @@ $ pip install -r requirements.txt
 Format the code.
 
 ```sh
-$ black src/*.py
+$ black sp/*.py
 ```
 
 Run static analysis on the code.
 
 ```sh
-$ pylint src/*.py
-$ flake8 src/*.py
+$ pylint sp/*.py
+$ flake8 sp/*.py
 ```
 
 ## Troubleshooting
