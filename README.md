@@ -10,13 +10,27 @@ It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googl
 
 <a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a> <a href="https://travis-ci.org/Garee/sp"><img src="https://travis-ci.org/Garee/sp.svg?branch=master" alt="Build status"></a>
 
+### Table of contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Command Line](#command-line)
+  - [Interactive Mode](#interactive-mode)
+- [Examples](#examples)
+- [Browser Support](#browser-support)
+- [Proxies](#proxies)
+- [Development Quick Start](#development-quick-start)
+- [Troubleshooting](#troubleshooting)
+
 ## Installation
 
 ```sh
 $ pip install sp
 ```
 
-## Command Line Usage
+## Usage
+
+### Command Line
 
 ```
 $ sp -h
@@ -48,7 +62,7 @@ License: GPLv3
 Website: https://github.com/garee/sp
 ```
 
-## Interactive Mode Usage
+### Interactive Mode
 
 ```
 f          view the first set of results
@@ -139,17 +153,11 @@ $ pylint src/*.py
 $ flake8 src/*.py
 ```
 
-Generate a distribution package in `./dist`.
-
-```sh
-$ python setup.py sdist bdist_wheel
-```
-
 ## Troubleshooting
 
 Please [create an issue](https://github.com/Garee/sp/issues) for any problems that you encounter.
 
-- Disable the coloured output if it does not work correctly on your system:
+1. Disable the coloured output if it does not work correctly on your system:
 
 ```
 $ sp --no-color
