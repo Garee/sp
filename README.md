@@ -1,6 +1,8 @@
 <h1 align="center">sp</h1>
 
-[![asciicast](https://asciinema.org/a/215338.svg)](https://asciinema.org/a/215338)
+<p align="center">
+<a href="https://asciinema.org/a/215338"><img src="https://asciinema.org/a/215338.png" alt="Asciicast" width="700"/></a>
+</p>
 
 `sp` is a command line utility to search Startpage.com from the terminal.
 
