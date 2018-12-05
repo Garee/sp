@@ -80,7 +80,10 @@ class SpREPL:
             {"match": "f", "action": self._on_matches_first},
             {"match": "n", "action": self._on_matches_next},
             {"match": "p", "action": self._on_matches_prev},
-            {"match": "s", "action": self._search},
+            {
+                "match": self._matches_search_keywords,
+                "action": self._on_matches_search_keywords,
+            },
             {"match": self._matches_copy_link, "action": self._on_matches_copy_link},
             {
                 "match": lambda cmd: cmd.isdigit(),
@@ -161,7 +164,14 @@ class SpREPL:
                 self.print_results(self.results, start_idx=self.page * 10)
 
     def _matches_copy_link(self, cmd):
-        return cmd[0] == "c" and len(cmd.split()) > 1
+        return cmd[0] == "c" and len(cmd.split()) == 2
+
+    def _matches_search_keywords(self, cmd):
+        return cmd[0] == "s" and len(cmd.split()) > 1
+
+    def _on_matches_search_keywords(self, cmd):
+        keywords = cmd.split()[1]
+        return self._search(keywords)
 
     def _on_matches_copy_link(self, cmd):
         sub_cmds = cmd.split()
