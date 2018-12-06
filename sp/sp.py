@@ -54,8 +54,8 @@ Website: https://github.com/garee/sp\n"""
     "help": """    f          view the first set of results
     n          view the next set of results
     p          view the previous set of results
-    1..10      open search result in web browser
-    c 1..10    copy the search result link to the clipboard
+    [index]    open search result in web browser
+    c [index]  copy the search result link to the clipboard
     s KEYWORDS perform a search for KEYWORDS
     ?          show help
     q          exit
@@ -181,7 +181,7 @@ class SpREPL:
         sub_cmds = cmd.split()
         first_cmd = sub_cmds[1]
         if first_cmd.isdigit():
-            idx = int(first_cmd)
+            idx = int(first_cmd) - (self.page * 10)
             if 0 < idx <= len(self.results):
                 result = self.results[idx - 1]
                 link = result["link"]
@@ -193,7 +193,7 @@ class SpREPL:
             print(MSG["invalid_idx"])
 
     def _on_matches_open_result(self, cmd):
-        idx = int(cmd)
+        idx = int(cmd) - (self.page * 10)
         if 0 < idx <= len(self.results):
             result = self.results[idx - 1]
             browser = self._get_web_browser()
