@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-<a href="https://asciinema.org/a/215338"><img src="https://asciinema.org/a/215338.png" alt="Asciicast" width="700"/></a>
+<a href="https://asciinema.org/a/215549"><img src="https://asciinema.org/a/215549.png" alt="Asciicast" width="700"/></a>
 </p>
 
 `sp` is a command line utility to search Startpage.com from the terminal.
@@ -62,7 +62,7 @@ optional arguments:
   --json                output the results in JSON; implies --no-prompt
   --no-color            disable color output
 
-Version 1.0.0
+Version 1.0.1
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
 Website: https://github.com/garee/sp
@@ -74,8 +74,8 @@ Website: https://github.com/garee/sp
 f          view the first set of results
 n          view the next set of results
 p          view the previous set of results
-1..10      open search result in web browser
-c 1..10    copy the search result link to the clipboard
+[index]      open search result in web browser
+c [index]    copy the search result link to the clipboard
 s KEYWORDS perform a search for KEYWORDS
 ?          show help
 q          exit
