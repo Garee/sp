@@ -23,6 +23,8 @@ import atexit
 import textwrap
 import argparse
 import webbrowser
+from urllib.parse import urlparse, urlunparse
+
 import requests
 import colorama
 import pyperclip
@@ -195,7 +197,8 @@ class SpREPL:
         if 0 < idx <= len(self.results):
             result = self.results[idx - 1]
             browser = self._get_web_browser()
-            browser.open_new_tab(result["link"])
+            url = self._get_result_url(result)
+            browser.open_new_tab(url)
         else:
             print(MSG["invalid_idx"])
 
@@ -206,6 +209,12 @@ class SpREPL:
             except Exception:
                 print(MSG["invalid_browser"] % self.args.browser)
         return webbrowser
+
+    def _get_result_url(self, result):
+        link = result["link"]
+        # Adds the 'http://' scheme if no scheme is included.
+        parsed_url = urlparse(link, scheme="http")
+        return urlunparse(parsed_url)
 
     def _search(self, cmd):
         self.page = 0
