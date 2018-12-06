@@ -46,7 +46,7 @@ MSG = {
 Version %s
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
-Website: https://github.com/garee/sp"""
+Website: https://github.com/garee/sp\n"""
         % _VERSION_
     ),
     "help": """    f          view the first set of results
