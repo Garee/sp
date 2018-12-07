@@ -74,8 +74,8 @@ Website: https://github.com/garee/sp
 f          view the first set of results
 n          view the next set of results
 p          view the previous set of results
-[index]      open search result in web browser
-c [index]    copy the search result link to the clipboard
+[index]    open search result in web browser
+c [index]  copy the search result link to the clipboard
 s KEYWORDS perform a search for KEYWORDS
 ?          show help
 q          exit
