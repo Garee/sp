@@ -1,4 +1,6 @@
-<h1 align="center">sp</h1>
+<p align="center">
+<img src="https://imgur.com/Z7A33Rm.png" title="sp" />
+</p>
 
 <p align="center">
 <a href="https://pypi.python.org/pypi/spcli"><img src="https://img.shields.io/pypi/v/spcli.svg?maxAge=600" alt="PyPI" /></a>
@@ -12,9 +14,7 @@
 
 `sp` is a command line utility to search Startpage.com from the terminal.
 
-It is  inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googler](https://github.com/jarun/googler).
-
-
+It is inspired by the projects [ddgr](https://github.com/jarun/ddgr) and [googler](https://github.com/jarun/googler).
 
 ## Table of contents
 
@@ -85,31 +85,37 @@ q          exit
 ## Examples
 
 1. Search for terms.
+
 ```
 $ sp hello world
 ```
 
 2. Search `bbc.co.uk` for news about brexit:
+
 ```
 $ sp -s bbc.co.uk brexit
 ```
 
 3. Search for results from the past 24 hours.
+
 ```
 $ sp -t d barcelona fc
 ```
 
 4. Open the first result automatically
+
 ```
 $ sp -f python docs
 ```
 
 5. Disable safe search.
+
 ```
 $ sp -u pawn
 ```
 
 6. Output in JSON format.
+
 ```
 $ sp --json climate change papers
 ```
@@ -123,6 +129,7 @@ You can specify which browser to use using the `--browser` flag. This also accep
 ```sh
 $ sp --browser firefox
 ```
+
 ## Proxies
 
 The requests library is used to perform the HTTP requests. You can configure proxies by [setting the environment variables](http://docs.python-requests.org/en/master/user/advanced/#proxies) `HTTP_PROXY` and `HTTPS_PROXY`.
@@ -135,6 +142,7 @@ $ export HTTPS_PROXY="http://10.10.2.10.1080"
 ## Development Quick Start
 
 Create and activate a virtual environment.
+
 ```sh
 $ mkvirtualenv -p python3 sp
 $ workon sp
