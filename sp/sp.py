@@ -93,7 +93,7 @@ class SpREPL:
             },
             {"match": "q", "action": lambda cmd: sys.exit(0)},
         ]
-        self.searcher = SpSearcher()
+        self.searcher = SpSearcher(self.args.page_size)
 
     def start(self, before_loop=lambda: None):
         if self.args.keywords:
@@ -148,7 +148,9 @@ class SpREPL:
                 },
             )
             if self.results:
-                self.print_results(self.results, start_idx=self.page * 10)
+                self.print_results(
+                    self.results, start_idx=self.page * self.args.page_size
+                )
 
     def _on_matches_prev(self, _cmd=None):
         if self.page and self.page > 0:
@@ -163,7 +165,9 @@ class SpREPL:
                 },
             )
             if self.results:
-                self.print_results(self.results, start_idx=self.page * 10)
+                self.print_results(
+                    self.results, start_idx=self.page * self.args.page_size
+                )
 
     def _matches_copy_link(self, cmd):
         tokens = cmd.split()
@@ -181,7 +185,7 @@ class SpREPL:
         sub_cmds = cmd.split()
         first_cmd = sub_cmds[1]
         if first_cmd.isdigit():
-            idx = int(first_cmd) - (self.page * 10)
+            idx = int(first_cmd) - (self.page * self.args.page_size)
             if 0 < idx <= len(self.results):
                 result = self.results[idx - 1]
                 link = result["link"]
@@ -193,7 +197,7 @@ class SpREPL:
             print(MSG["invalid_idx"])
 
     def _on_matches_open_result(self, cmd):
-        idx = int(cmd) - (self.page * 10)
+        idx = int(cmd) - (self.page * self.args.page_size)
         if 0 < idx <= len(self.results):
             result = self.results[idx - 1]
             browser = self._get_web_browser()
@@ -253,6 +257,7 @@ class SpREPL:
 
     def print_results(self, results, start_idx=0):
         LOGGER.debug("Found %d results.", len(results))
+        LOGGER.debug("start_idx %d", start_idx)
         if self.args.json:
             self._print_results_as_json(results)
         else:
@@ -301,8 +306,8 @@ class SpREPL:
 class SpSearcher:
     search_url = "https://www.startpage.com/do/search"
 
-    def __init__(self):
-        self.page_size = 10
+    def __init__(self, page_size):
+        self.page_size = page_size
         self.qid = ""
 
     def get_opts(self, opts):
@@ -346,14 +351,14 @@ class SpSearcher:
     def parse_search_result_page(self, page):
         results = []
         tree = html.fromstring(page)
-        result_nodes = tree.find_class("search-result")
+        result_nodes = tree.find_class("w-gl__result")
         for node in result_nodes:
-            title_nodes = node.find_class("search-item__title")
-            subtitle_nodes = node.find_class("search-item__sub-title")
-            description_nodes = node.find_class("search-item__body")
-            title = title_nodes[0].xpath("a")[0].text_content()
-            subtitle = subtitle_nodes[0].xpath("span")[0].text_content()
-            description = description_nodes[0].text_content()
+            title_nodes = node.find_class("w-gl__result-title")
+            subtitle_nodes = node.find_class("w-gl__result-url")
+            description_nodes = node.xpath("span")
+            title = title_nodes[0].text_content().strip()
+            subtitle = subtitle_nodes[0].text_content().strip()
+            description = description_nodes[0].text_content().strip()
             results.append(
                 {"title": title, "link": subtitle, "description": description}
             )
@@ -396,6 +401,14 @@ class SpArgumentParser(argparse.ArgumentParser):
             "-u", "--unsafe", action="store_true", help="disable the family filter"
         )
         self.add_argument("-v", "--version", action="version", version=_VERSION_)
+        self.add_argument(
+            "-n",
+            "--num",
+            metavar="N",
+            dest="page_size",
+            default=10,
+            help="show N (0<=N<=10) results per page (default 10)",
+        )
         self.add_argument(
             "-np",
             "--no-prompt",
@@ -497,8 +510,7 @@ def start_repl(args):
         LOGGER.error(ex)
         if LOGGER.isEnabledFor(logging.DEBUG):
             raise
-        else:
-            sys.exit(1)
+        sys.exit(1)
 
 
 def main():
