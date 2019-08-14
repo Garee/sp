@@ -35,7 +35,7 @@ try:
 except ImportError:
     pass  # Unavailable on Windows.
 
-_VERSION_ = "1.0.1"
+_VERSION_ = "1.0.2"
 
 LOGGER = logging.getLogger(__name__)
 
