@@ -35,7 +35,7 @@ try:
 except ImportError:
     pass  # Unavailable on Windows.
 
-_VERSION_ = "1.0.2"
+_VERSION_ = "1.0.3"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -355,7 +355,7 @@ class SpSearcher:
         for node in result_nodes:
             title_nodes = node.find_class("w-gl__result-title")
             subtitle_nodes = node.find_class("w-gl__result-url")
-            description_nodes = node.xpath("span")
+            description_nodes = node.find_class("w-gl__description")
             title = title_nodes[0].text_content().strip()
             subtitle = subtitle_nodes[0].text_content().strip()
             description = description_nodes[0].text_content().strip()
