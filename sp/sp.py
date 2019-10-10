@@ -25,6 +25,7 @@ import argparse
 import webbrowser
 from urllib.parse import urlparse, urlunparse
 
+import http.client
 import requests
 import colorama
 import pyperclip
@@ -455,8 +456,6 @@ def configure_logging():
 
 
 def init_requests_logging():
-    import http.client
-
     http.client.HTTPConnection.debuglevel = 1
     requests_log = logging.getLogger("requests.packages.urllib3")
     requests_log.setLevel(logging.DEBUG)
