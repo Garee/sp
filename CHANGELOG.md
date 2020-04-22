@@ -1,3 +1,8 @@
+# v1.0.3
+10 October 2019
+
+- Fixed description parsing bug that caused no search results to be displayed.
+
 # v1.0.2
 14 August 2019
 

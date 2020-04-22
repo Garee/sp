@@ -25,6 +25,7 @@ import argparse
 import webbrowser
 from urllib.parse import urlparse, urlunparse
 
+import http.client
 import requests
 import colorama
 import pyperclip
@@ -35,7 +36,7 @@ try:
 except ImportError:
     pass  # Unavailable on Windows.
 
-_VERSION_ = "1.0.2"
+_VERSION_ = "1.0.3"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -455,8 +456,6 @@ def configure_logging():
 
 
 def init_requests_logging():
-    import http.client
-
     http.client.HTTPConnection.debuglevel = 1
     requests_log = logging.getLogger("requests.packages.urllib3")
     requests_log.setLevel(logging.DEBUG)
