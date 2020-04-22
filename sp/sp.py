@@ -306,6 +306,7 @@ class SpREPL:
 
 class SpSearcher:
     search_url = "https://www.startpage.com/do/search"
+    user_agent = {'User-agent': 'Mozilla/5.0'}
 
     def __init__(self, page_size):
         self.page_size = page_size
@@ -343,7 +344,7 @@ class SpSearcher:
             "with_date": opts["with_date"],  # y, m, w, d
         }
         try:
-            res = requests.post(self.search_url, data, cookies=self.get_cookies(opts))
+            res = requests.post(self.search_url, data, cookies=self.get_cookies(opts), headers=self.user_agent)
             self.qid = self._parse_qid(res.content)
             return self.parse_search_result_page(res.content)
         except Exception as ex:
