@@ -252,7 +252,7 @@ class SpREPL:
             self._print_idx(idx)
             self._print_title(result["title"])
             self._print_link(result["link"])
-            if result["description"]:
+            if result["description"] and self.args.noDescription == False:
                 self._print_description(result["description"])
             print()
 
@@ -306,7 +306,7 @@ class SpREPL:
 
 class SpSearcher:
     search_url = "https://www.startpage.com/do/search"
-    user_agent = {'User-agent': 'Mozilla/5.0'}
+    user_agent = {'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36'}
 
     def __init__(self, page_size):
         self.page_size = page_size
@@ -401,6 +401,14 @@ class SpArgumentParser(argparse.ArgumentParser):
         )
         self.add_argument(
             "-u", "--unsafe", action="store_true", help="disable the family filter"
+        )
+        self.add_argument(
+            "-nd",
+            "--no-description",
+            action="store_true",
+            dest="noDescription",
+            default=False,
+            help="disable printing link description"
         )
         self.add_argument("-v", "--version", action="version", version=_VERSION_)
         self.add_argument(
