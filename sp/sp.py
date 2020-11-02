@@ -344,7 +344,12 @@ class SpSearcher:
             "with_date": opts["with_date"],  # y, m, w, d
         }
         try:
-            res = requests.post(self.search_url, data, cookies=self.get_cookies(opts), headers=self.user_agent)
+            res = requests.post(
+                self.search_url,
+                data,
+                cookies=self.get_cookies(opts),
+                headers=self.user_agent,
+            )
             self.qid = self._parse_qid(res.content)
             return self.parse_search_result_page(res.content)
         except Exception as ex:
