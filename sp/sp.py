@@ -252,7 +252,7 @@ class SpREPL:
             self._print_idx(idx)
             self._print_title(result["title"])
             self._print_link(result["link"])
-            if result["description"] and self.args.noDescription == False:
+            if result["description"] and self.args.noDescription is False:
                 self._print_description(result["description"])
             print()
 
