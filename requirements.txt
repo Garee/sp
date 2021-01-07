@@ -1,7 +1,7 @@
 argparse==1.4.0
 colorama==0.4.1
 flake8>=3.6.0
-lxml==4.2.5
+lxml==4.6.2
 pylint>=2.1.1
 pyperclip==1.7.0
 requests==2.20.1
