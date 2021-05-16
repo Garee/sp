@@ -355,6 +355,7 @@ class SpSearcher:
             return self.parse_search_result_page(res.content)
         except Exception as ex:
             LOGGER.error(ex)
+            return []
 
     def parse_search_result_page(self, page):
         results = []
