@@ -1,3 +1,7 @@
+# v1.0.4
+09 June 2021
+
+- Fixed results not displaying due to new HTTP header requirements.
 # v1.0.3
 10 October 2019
 

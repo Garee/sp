@@ -62,7 +62,7 @@ optional arguments:
   --json                output the results in JSON; implies --no-prompt
   --no-color            disable color output
 
-Version 1.0.2
+Version 1.0.4
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
 Website: https://github.com/garee/sp
