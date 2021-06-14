@@ -1,8 +1,8 @@
 language: python
 python:
-  - "3.5"
-  - "3.6"
+  - "3.9"
 install:
   pip install -r requirements.txt
 script:
-  pylint sp/*.py && flake8 sp/*.py
+  - pylint sp/*.py && flake8 sp/*.py
+  - bash test/travis.sh
