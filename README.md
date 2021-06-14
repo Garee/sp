@@ -5,7 +5,7 @@
 <p align="center">
 <a href="https://pypi.python.org/pypi/spcli"><img src="https://img.shields.io/pypi/v/spcli.svg?maxAge=600" alt="PyPI" /></a>
 <a href="https://pypi.python.org/pypi/spcli"><img src="https://img.shields.io/pypi/pyversions/spcli.svg" alt="Python versions"></a>
-<a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a> <a href="https://travis-ci.org/Garee/sp"><img src="https://travis-ci.org/Garee/sp.svg?branch=master" alt="Build status"></a>
+<a href="https://github.com/garee/sp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/garee/sp.svg" alt="License" /></a> <a href="https://travis-ci.com/Garee/sp"><img src="https://travis-ci.com/Garee/sp.svg?branch=master" alt="Build status"></a>
 </p>
 
 <p align="center">
