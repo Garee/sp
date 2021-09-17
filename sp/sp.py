@@ -45,12 +45,11 @@ MSG = {
     "farewell": "Goodbye!",
     "description": "Search Startpage.com from the terminal.",
     "info": (
-        """
-Version %s
+        f"""
+Version {_VERSION_}
 Copyright © 2018 Gary Blackwood <gary@garyblackwood.co.uk>
 License: GPLv3
 Website: https://github.com/garee/sp\n"""
-        % _VERSION_
     ),
     "help": """    f          view the first set of results
     n          view the next set of results
@@ -191,7 +190,7 @@ class SpREPL:
                 result = self.results[idx - 1]
                 link = result["link"]
                 pyperclip.copy(link)
-                print("Copied link: %s" % link)
+                print(f"Copied link: {link}")
             else:
                 print(MSG["invalid_idx"])
         else:
@@ -331,7 +330,8 @@ class SpSearcher:
     def search(self, query, page=0, opts=None):
         opts = self.get_opts(opts)
         if opts["with_site"]:
-            query = "host:%s %s" % (opts["with_site"], query)
+            host = opts["with_site"]
+            query = f"host:{host} {query}"
         data = {
             "cmd": "process_search",
             "query": query,
